@@ -1,2 +1,2 @@
-# DeepComparison
-Deep comparison of .net objects done right
+# DeepComparer
+Yet another deep object comparer for .net
