@@ -25,9 +25,9 @@ namespace DeepComparison
                 ? TreatObjectAs.Simple
                 : new TreatObjectAs.Custom((x, y) =>
                 {
-                    if (x == null && y == null) return True;
-                    if (x == null || y == null) return False;
-                    return func((T) x, (T) y) ? True : False;
+                    if (x == null && y == null) return true;
+                    if (x == null || y == null) return false;
+                    return func((T) x, (T) y);
                 }));
         }
 

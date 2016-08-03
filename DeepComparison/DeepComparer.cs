@@ -26,10 +26,9 @@ namespace DeepComparison
         /// <typeparam name="T">objects formal type. 
         ///     By default comparer doesn't care about runtime types 
         ///     of the arguments</typeparam>
-        public ComparisonResult Compare<T>(T x, T y)
-        {
-            return _cache.Get(typeof(T))(x, y);
-        }
+        public ComparisonResult Compare<T>(T x, T y) => 
+            _cache.Get(typeof(T))(x, y);
+
         /// <summary>Compares two objects deeply</summary>
         /// <param name="x">an object to compare</param>
         /// <param name="y">an object to compare</param>
@@ -37,10 +36,8 @@ namespace DeepComparison
         ///     By default comparer doesn't care about runtime types 
         ///     of the arguments</param>
         /// <returns>true when equal</returns>
-        public ComparisonResult Compare(object x, object y, Type formalType)
-        {
-            return _cache.Get(formalType)(x, y);
-        }
+        public ComparisonResult Compare(object x, object y, Type formalType) =>
+            _cache.Get(formalType)(x, y);
 
         private FCompare GetComparer(Type formalType)
         {
@@ -52,9 +49,23 @@ namespace DeepComparison
                 return (x, y) => CompareCollection(x, y, collection);
             var custom = compareOption as TreatObjectAs.Custom;
             if (custom != null)
-                return custom.Comparer;
+            {
+                return Custom(custom.Comparer);
+            }
             return ObjEquals;
         }
+
+        private FCompare Custom(Func<object, object, bool> comparer)
+        {
+            return (x, y) =>
+            {
+                if (comparer(x, y)) return True;
+                var xText = _formatting.Format(x);
+                var yText = _formatting.Format(y);
+                return $"customCompare({xText}, {yText})";
+            };
+        }
+   
         private ComparisonResult ObjEquals(object x, object y)
         {
             if (Equals(x, y)) return True;

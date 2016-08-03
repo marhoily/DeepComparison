@@ -30,10 +30,10 @@ namespace DeepComparison
         public sealed class Custom : TreatObjectAs
         {
             /// <summary>Your comparison function</summary>
-            public FCompare Comparer { get; }
+            public Func<object, object, bool> Comparer { get; }
 
             /// <summary>initializes all props</summary>
-            public Custom(FCompare comparer) { Comparer = comparer; }
+            public Custom(Func<object, object, bool> comparer) { Comparer = comparer; }
         }
 
         private sealed class Special : TreatObjectAs { }
