@@ -30,13 +30,13 @@ namespace DeepComparison
             _cache.Get(typeof(T))(x, y);
 
         /// <summary>Compares two objects deeply</summary>
-        /// <param name="x">an object to compare</param>
-        /// <param name="y">an object to compare</param>
         /// <param name="formalType">objects formal type. 
         ///     By default comparer doesn't care about runtime types 
         ///     of the arguments</param>
+        /// <param name="x">an object to compare</param>
+        /// <param name="y">an object to compare</param>
         /// <returns>true when equal</returns>
-        public ComparisonResult Compare(object x, object y, Type formalType) =>
+        public ComparisonResult Compare(Type formalType, object x, object y) =>
             _cache.Get(formalType)(x, y);
 
         private FCompare GetComparer(Type formalType)

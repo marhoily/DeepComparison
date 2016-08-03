@@ -14,21 +14,17 @@ namespace DeepComparison
         {
             _propSelector = selector;
         }
-        public ComparisonResult CompareProperties(object x, object y, Type formalType, Func<object, object, Type, ComparisonResult> comparer, Formatting formatting)
+        public ComparisonResult CompareProperties(object x, object y, Type formalType, Func<Type, object, object, ComparisonResult> comparer, Formatting formatting)
         {
             if (x == null && y == null) return True;
             if (x == null || y == null)
                 return formatting.Explain(x, y, "comparePropertiesOf");
             foreach (var p in formalType.GetProperties(Instance | Public | NonPublic).Where(_propSelector))
             {
-                var c = comparer(
-                    p.GetValue(x, null), p.GetValue(y, null), 
-                    p.PropertyType);
+                var result = comparer(p.PropertyType,
+                    p.GetValue(x, null), p.GetValue(y, null));
 
-                if (!c.AreEqual)
-                {
-                    return c.WithPath(p);
-                }
+                if (!result.AreEqual) return result.WithPath(p);
             }
             return True;
         }

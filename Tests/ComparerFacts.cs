@@ -45,7 +45,7 @@ namespace Tests
         {
             _builder.GoDeepFor(t => t == typeof(X));
             Assert.Throws<TargetException>(()
-                => _builder.Build().Compare(new X(), new Y(), typeof(X)));
+                => _builder.Build().Compare(typeof(X), new X(), new Y()));
         }
         [Fact]
         public void Compare_Collections()
