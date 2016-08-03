@@ -97,8 +97,8 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new X[0]  };
             _builder.GoDeepFor(Collections.Array)
-                .Build()
-                .Compare(a, b).Should().Be(False);
+                .Build().Compare(a, b).Path.Should()
+                .Be("y collection lacks an item");
         }
         [Fact]
         public void Collection_Null_Element()

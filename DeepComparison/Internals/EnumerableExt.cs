@@ -14,7 +14,7 @@ namespace DeepComparison
             var yEr = yE.GetEnumerator();
             while (xEr.MoveNext())
             {
-                if (!yEr.MoveNext()) return False;
+                if (!yEr.MoveNext()) return new ComparisonResult("y collection lacks an item");
                 if (!compare(xEr.Current, yEr.Current).AreEqual) return False;
             }
             return !yEr.MoveNext() ? True : False;
