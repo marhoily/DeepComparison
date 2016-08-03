@@ -13,11 +13,15 @@ namespace Tests
             new DeepComparerBuilder();
 
         [Fact]
-        public void PassNull()
+        public void Null_And_NonNull()
         {
             var notNull = new X { I = 3 };
             _builder.Build().Compare(null, notNull).Path.Should()
                 .Be("object.Equals(<null>, Tests.ComparerFacts+X)");
+        }
+        [Fact]
+        public void Null_Should_Equal_Null()
+        {
             _builder.Build().Compare<X>(null, null).Should().Be(True);
         }
         [Fact]
