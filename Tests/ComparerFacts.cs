@@ -16,7 +16,7 @@ namespace Tests
         public void Null_And_NonNull()
         {
             var notNull = new X { I = 3 };
-            _builder.Build().Compare(null, notNull).Path.Should()
+            _builder.Build().Compare(null, notNull).Message.Should()
                 .Be("object.Equals(<null>, Tests.ComparerFacts+X)");
         }
         [Fact]
@@ -28,7 +28,7 @@ namespace Tests
         public void Do_Not_Expand_Objects_By_Default()
         {
             _builder.Build()
-                .Compare(new X { I = 3 }, new X { I = 3 }).Path.Should()
+                .Compare(new X { I = 3 }, new X { I = 3 }).Message.Should()
                 .Be("object.Equals(Tests.ComparerFacts+X, Tests.ComparerFacts+X)");
         }
         [Fact]
@@ -51,7 +51,7 @@ namespace Tests
         public void Compare_Collections()
         {
             _builder.GoDeepFor(Collections.Enumerable)
-                .Build().Compare(null, new Guid[0]).Path.Should()
+                .Build().Compare(null, new Guid[0]).Message.Should()
                 .Be("compareCollections(<null>, System.Guid[])");
         }
 

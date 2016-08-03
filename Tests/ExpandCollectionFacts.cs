@@ -23,7 +23,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
-            _builder.Build().Compare(a, b).Path.Should()
+            _builder.Build().Compare(a, b).Message.Should()
                 .Be("object.Equals(Tests.ExpandCollectionFacts+X[], Tests.ExpandCollectionFacts+X[])");
         }
 
@@ -33,7 +33,7 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x2 } };
             _builder.GoDeepFor(Collections.Array)
-                .Build().Compare(a, b).Path.Should()
+                .Build().Compare(a, b).Message.Should()
                 .Be("object.Equals(<null>, System.Collections.Generic.HashSet`1[Tests.ExpandCollectionFacts+X])");
         }
         [Fact]
@@ -88,7 +88,7 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new X[0]  };
             _builder.GoDeepFor(Collections.Array)
-                .Build().Compare(a, b).Path.Should()
+                .Build().Compare(a, b).Message.Should()
                 .Be("y collection lacks an item");
         }
         [Fact]
@@ -97,7 +97,7 @@ namespace Tests
             var a = new X { A = new X[0]  };
             var b = new X { A = new[] { _x1 } };
             _builder.GoDeepFor(Collections.Array)
-                .Build().Compare(a, b).Path.Should()
+                .Build().Compare(a, b).Message.Should()
                 .Be("x collection lacks an item");
         }
         [Fact]
@@ -106,7 +106,7 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new X[] { null } };
             _builder.GoDeepFor(Collections.Array)
-                .Build().Compare(a, b).Path.Should()
+                .Build().Compare(a, b).Message.Should()
                 .Be("comparePropertiesOf(Tests.ExpandCollectionFacts+X, <null>)");
         }
 

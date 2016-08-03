@@ -26,7 +26,7 @@ namespace Tests
 
         [Fact]
         public void Should_See_Private_Properties() => _comparer
-            .Compare(new X(3, 4), new X(5, 4)).Path
+            .Compare(new X(3, 4), new X(5, 4)).Message
             .Should().Be("object.Equals(3, 5)");
 
         public class X

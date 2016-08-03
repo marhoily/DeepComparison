@@ -25,8 +25,8 @@ namespace Tests
         public void Custom_True()
         {
             _comparer
-                .Compare(new X { I = 3 }, new X { I = 40 }).Path
-                .Should().Be("customCompare(3, 40)");
+                .Compare(new X { I = 3 }, new X { I = 40 }).ToString()
+                .Should().Be("I: customCompare(3, 40)");
         }
 
         public class X

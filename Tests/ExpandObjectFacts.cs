@@ -20,7 +20,7 @@ namespace Tests
         {
             var a = new X { In = 2 };
             var b = new X { In = 3 };
-            _comparer.Compare(a, b).Path
+            _comparer.Compare(a, b).Message
                 .Should().Be("object.Equals(2, 3)");
         }
         [Fact]
@@ -42,7 +42,7 @@ namespace Tests
         {
             var a = new X { Px = new X { In = 3 } };
             var b = new X { Px = new X { In = 4 } };
-            _comparer.Compare(a, b).Path
+            _comparer.Compare(a, b).Message
                 .Should().Be("object.Equals(3, 4)");
         }
 

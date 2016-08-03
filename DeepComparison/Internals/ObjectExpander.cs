@@ -19,14 +19,18 @@ namespace DeepComparison
             if (x == null && y == null) return True;
             if (x == null || y == null)
                 return formatting.Explain(x, y, "comparePropertiesOf");
-            return formalType
-                .GetProperties(Instance | Public | NonPublic) 
-                .Where(_propSelector)
-                .Select(p => comparer(
-                    p.GetValue(x, null),
-                    p.GetValue(y, null),
-                    p.PropertyType))
-                .FirstOrDefault(c => !c.AreEqual) ?? True;
+            foreach (var p in formalType.GetProperties(Instance | Public | NonPublic).Where(_propSelector))
+            {
+                var c = comparer(
+                    p.GetValue(x, null), p.GetValue(y, null), 
+                    p.PropertyType);
+
+                if (!c.AreEqual)
+                {
+                    return c.WithPath(p);
+                }
+            }
+            return True;
         }
     }
 }
