@@ -33,8 +33,8 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x2 } };
             _builder.GoDeepFor(Collections.Array)
-                .Build()
-                .Compare(a, b).Should().Be(False);
+                .Build().Compare(a, b).Path.Should()
+                .Be("object.Equals(<null>, System.Collections.Generic.HashSet`1[Tests.ExpandCollectionFacts+X])");
         }
         [Fact]
         public void Full_Syntax()
@@ -82,15 +82,6 @@ namespace Tests
                 .Compare(a, b).Should().Be(True));
         }
 
-        [Fact]
-        public void Collection_Different_Elements()
-        {
-            var a = new X { A = new[] { _x1 } };
-            var b = new X { A = new[] { _x2 } };
-            _builder.GoDeepFor(Collections.Array)
-                .Build()
-                .Compare(a, b).Should().Be(False);
-        }
         [Fact]
         public void Collection_Different_Sizes()
         {

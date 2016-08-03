@@ -15,7 +15,9 @@ namespace DeepComparison
             while (xEr.MoveNext())
             {
                 if (!yEr.MoveNext()) return new ComparisonResult("y collection lacks an item");
-                if (!compare(xEr.Current, yEr.Current).AreEqual) return False;
+                var c = compare(xEr.Current, yEr.Current);
+                if (!c.AreEqual)
+                    return c;
             }
             return !yEr.MoveNext() ? True : False;
         }
