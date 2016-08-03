@@ -15,17 +15,18 @@ namespace DeepComparison
             _propSelector = selector;
         }
         public ComparisonResult CompareProperties(object x, object y, 
-            Type formalType, Func<object, object, Type, bool> comparer)
+            Type formalType, Func<object, object, Type, ComparisonResult> comparer)
         {
             if (x == null && y == null) return True;
             if (x == null || y == null) return False;
             return formalType
                 .GetProperties(Instance | Public | NonPublic) 
                 .Where(_propSelector)
-                .All(p => comparer(
+                .Select(p => comparer(
                     p.GetValue(x, null),
                     p.GetValue(y, null),
-                    p.PropertyType)) ? True : False;
+                    p.PropertyType))
+                .FirstOrDefault(c => !c.AreEqual) ?? True;
         }
     }
 }

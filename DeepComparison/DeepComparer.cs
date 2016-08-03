@@ -25,9 +25,9 @@ namespace DeepComparison
         /// <typeparam name="T">objects formal type. 
         ///     By default comparer doesn't care about runtime types 
         ///     of the arguments</typeparam>
-        public bool Compare<T>(T x, T y)
+        public ComparisonResult Compare<T>(T x, T y)
         {
-            return _cache.Get(typeof(T))(x, y).AreEqual;
+            return _cache.Get(typeof(T))(x, y);
         }
         /// <summary>Compares two objects deeply</summary>
         /// <param name="x">an object to compare</param>
@@ -36,9 +36,9 @@ namespace DeepComparison
         ///     By default comparer doesn't care about runtime types 
         ///     of the arguments</param>
         /// <returns>true when equal</returns>
-        public bool Compare(object x, object y, Type formalType)
+        public ComparisonResult Compare(object x, object y, Type formalType)
         {
-            return _cache.Get(formalType)(x, y).AreEqual;
+            return _cache.Get(formalType)(x, y);
         }
         private FCompare GetComparer(Type formalType)
         {
@@ -54,7 +54,7 @@ namespace DeepComparison
 
         private static ComparisonResult ObjEquals(object x, object y)
         {
-            return Equals(x, y) ? True : new ComparisonResult("???");
+            return Equals(x, y) ? True : False;
         }
 
         private ComparisonResult CompareCollection(object x, object y, TreatObjectAs.Collection collection)

@@ -1,6 +1,7 @@
 ﻿using DeepComparison;
 using FluentAssertions;
 using Xunit;
+using static DeepComparison.ComparisonResult;
 
 namespace Tests
 {
@@ -15,18 +16,18 @@ namespace Tests
         {
             _comparer
                 .Compare(new X(3, 4), new X(3, 4))
-                .Should().BeTrue();
+                .Should().Be(True);
         }
 
         [Fact]
         public void Should_Not_See_Fields() => _comparer
             .Compare(new X(3, 4), new X(3, 5))
-            .Should().BeTrue();
+            .Should().Be(True);
 
         [Fact]
         public void Should_See_Private_Properties() => _comparer
             .Compare(new X(3, 4), new X(5, 4))
-            .Should().BeFalse();
+            .Should().Be(False);
 
         public class X
         {

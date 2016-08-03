@@ -2,6 +2,7 @@
 using DeepComparison;
 using FluentAssertions;
 using Xunit;
+using static DeepComparison.ComparisonResult;
 
 namespace Tests
 {
@@ -18,14 +19,14 @@ namespace Tests
         {
             _comparer
                 .Compare(new X { I = 3 }, new X { I = 4 })
-                .Should().BeTrue();
+                .Should().Be(True);
         }
         [Fact]
         public void Custom_True()
         {
             _comparer
                 .Compare(new X { I = 3 }, new X { I = 40 })
-                .Should().BeFalse();
+                .Should().Be(False);
         }
 
         public class X

@@ -5,6 +5,7 @@ using DeepComparison;
 using FluentAssertions;
 using Xunit;
 using static DeepComparison.CollectionComparison;
+using static DeepComparison.ComparisonResult;
 
 namespace Tests
 {
@@ -22,7 +23,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
-            _builder.Build().Compare(a, b).Should().BeFalse();
+            _builder.Build().Compare(a, b).Should().Be(False);
         }
 
         [Fact]
@@ -32,7 +33,7 @@ namespace Tests
             var b = new X { A = new[] { _x2 } };
             _builder.GoDeepFor(Collections.Array)
                 .Build()
-                .Compare(a, b).Should().BeFalse();
+                .Compare(a, b).Should().Be(False);
         }
         [Fact]
         public void Full_Syntax()
@@ -46,7 +47,7 @@ namespace Tests
                         t.GetElementType(),
                         x => (IEnumerable)x))
                 .Build()
-                .Compare(a, b).Should().BeTrue();
+                .Compare(a, b).Should().Be(True);
         }
         [Fact]
         public void Expand_Two()
@@ -57,7 +58,7 @@ namespace Tests
                 .GoDeepFor(Collections.Array)
                 .GoDeepFor(Collections.List)
                 .Build()
-                .Compare(a, b).Should().BeTrue();
+                .Compare(a, b).Should().Be(True);
         }
         [Fact]
         public void Expand_Enumerable()
@@ -66,7 +67,7 @@ namespace Tests
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _builder.GoDeepFor(Collections.Enumerable)
                 .Build()
-                .Compare(a, b).Should().BeTrue();
+                .Compare(a, b).Should().Be(True);
         }
         [Fact]
         public void Expand_Ambiguity()
@@ -77,7 +78,7 @@ namespace Tests
                 .GoDeepFor(Collections.List)
                 .GoDeepFor(Collections.Enumerable)
                 .Build()
-                .Compare(a, b).Should().BeTrue());
+                .Compare(a, b).Should().Be(True));
         }
 
         [Fact]
@@ -87,7 +88,7 @@ namespace Tests
             var b = new X { A = new[] { _x2 } };
             _builder.GoDeepFor(Collections.Array)
                 .Build()
-                .Compare(a, b).Should().BeFalse();
+                .Compare(a, b).Should().Be(False);
         }
         [Fact]
         public void Collection_Different_Sizes()
@@ -96,7 +97,7 @@ namespace Tests
             var b = new X { A = new X[0]  };
             _builder.GoDeepFor(Collections.Array)
                 .Build()
-                .Compare(a, b).Should().BeFalse();
+                .Compare(a, b).Should().Be(False);
         }
         [Fact]
         public void Collection_Null_Element()
@@ -105,7 +106,7 @@ namespace Tests
             var b = new X { A = new X[] { null } };
             _builder.GoDeepFor(Collections.Array)
                 .Build()
-                .Compare(a, b).Should().BeFalse();
+                .Compare(a, b).Should().Be(False);
         }
 
         [Fact]
@@ -115,7 +116,7 @@ namespace Tests
             var b = new X { A = new X[] { null } };
             _builder.GoDeepFor(Collections.Array)
                 .Build()
-                .Compare(a, b).Should().BeTrue();
+                .Compare(a, b).Should().Be(True);
         }
 
         public class X

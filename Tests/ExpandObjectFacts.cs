@@ -3,6 +3,7 @@ using DeepComparison;
 using FluentAssertions;
 using FluentAssertions.Common;
 using Xunit;
+using static DeepComparison.ComparisonResult;
 
 namespace Tests
 {
@@ -19,28 +20,28 @@ namespace Tests
         {
             var a = new X { In = 2 };
             var b = new X { In = 3 };
-            _comparer.Compare(a, b).Should().BeFalse();
+            _comparer.Compare(a, b).Should().Be(False);
         }
         [Fact]
         public void ShouldNot_Compare_Ignored_Properties()
         {
             var a = new X { Out = 3 };
             var b = new X { Out = 2 };
-            _comparer.Compare(a, b).Should().BeTrue();
+            _comparer.Compare(a, b).Should().Be(True);
         }
         [Fact]
         public void Should_GoDeepFor_Objects()
         {
             var a = new X { Px = new X { In = 3 } };
             var b = new X { Px = new X { In = 3 } };
-            _comparer.Compare(a, b).Should().BeTrue();
+            _comparer.Compare(a, b).Should().Be(True);
         }
         [Fact]
         public void Deep_Different()
         {
             var a = new X { Px = new X { In = 3 } };
             var b = new X { Px = new X { In = 4 } };
-            _comparer.Compare(a, b).Should().BeFalse();
+            _comparer.Compare(a, b).Should().Be(False);
         }
 
         [DataContract]
