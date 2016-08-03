@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using DeepComparison;
 using FluentAssertions;
 using Xunit;
@@ -41,6 +42,13 @@ namespace Tests
             _builder.GoDeepFor(t => t == typeof(X));
             Assert.Throws<TargetException>(()
                 => _builder.Build().Compare(new X(), new Y(), typeof(X)));
+        }
+        [Fact]
+        public void Compare_Collections()
+        {
+            _builder.GoDeepFor(Collections.Enumerable)
+                .Build().Compare(null, new Guid[0]).Path.Should()
+                .Be("compareCollections(<null>, System.Guid[])");
         }
 
         public class X { public int I { get; set; } }

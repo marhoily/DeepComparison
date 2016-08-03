@@ -55,17 +55,22 @@ namespace DeepComparison
         private FCompare Custom(Func<object, object, bool> comparer) =>
             (x, y) => Cmp(x, y, "customCompare", comparer);
 
-        private ComparisonResult Cmp(object x, object y, string tag, Func<object, object, bool> comparer)
+        private ComparisonResult Cmp(object x, object y, string tag, Func<object, object, bool> comparer) 
+            => comparer(x, y) ? True : Explain(x, y, tag);
+
+        private ComparisonResult Explain(object x, object y, string tag)
         {
-            if (comparer(x, y)) return True;
             var xText = _formatting.Format(x);
             var yText = _formatting.Format(y);
             return $"{tag}({xText}, {yText})";
         }
+
         private ComparisonResult CompareCollection(object x, object y, TreatObjectAs.Collection collection)
         {
             if (x == null && y == null) return True;
-            if (x == null || y == null) return False;
+            if (x == null || y == null)
+                return Explain(x, y, "compareCollections");
+
             var xE = collection.ToEnumerable(x);
             var yE = collection.ToEnumerable(y);
             if (collection.Comparison == CollectionComparison.Sequential)
