@@ -11,6 +11,7 @@ namespace DeepComparison
         private readonly ObjectExpander _objectExpander;
         private readonly RulesContainer _rulesContainer;
         private readonly CachingDictionary<Type, FCompare> _cache;
+        private readonly Formatting _formatting = new Formatting();
 
         internal DeepComparer(
             ObjectExpander objectExpander,
@@ -49,12 +50,17 @@ namespace DeepComparison
             if (collection != null)
                 return (x, y) => CompareCollection(x, y, collection);
             var custom = compareOption as TreatObjectAs.Custom;
-            return custom != null ? custom.Comparer : ObjEquals;
+            if (custom != null)
+                return custom.Comparer;
+            return ObjEquals;
         }
 
-        private static ComparisonResult ObjEquals(object x, object y)
+        private ComparisonResult ObjEquals(object x, object y)
         {
-            return Equals(x, y) ? True : False;
+            if (Equals(x, y)) return True;
+            var xText = _formatting.Format(x);
+            var yText = _formatting.Format(y);
+            return $"object.Equals({xText}, {yText})";
         }
 
         private ComparisonResult CompareCollection(object x, object y, TreatObjectAs.Collection collection)
@@ -66,6 +72,15 @@ namespace DeepComparison
             if (collection.Comparison == CollectionComparison.Sequential)
                 return xE.SequenceEqual(yE, _cache.Get(collection.ItemType));
             throw new NotImplementedException();
+        }
+    }
+
+    internal sealed class Formatting
+    {
+        public string Format(object obj)
+        {
+            if (obj == null) return "<null>";
+            return obj.ToString();
         }
     }
 }

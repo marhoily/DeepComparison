@@ -23,7 +23,8 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
-            _builder.Build().Compare(a, b).Should().Be(False);
+            _builder.Build().Compare(a, b).Path.Should()
+                .Be("object.Equals(Tests.ExpandCollectionFacts+X[], Tests.ExpandCollectionFacts+X[])");
         }
 
         [Fact]

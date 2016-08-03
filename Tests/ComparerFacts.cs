@@ -15,15 +15,16 @@ namespace Tests
         public void PassNull()
         {
             var notNull = new X { I = 3 };
-            _builder.Build().Compare(null, notNull).Should().Be(False);
+            _builder.Build().Compare(null, notNull).Path.Should()
+                .Be("object.Equals(<null>, Tests.ComparerFacts+X)");
             _builder.Build().Compare<X>(null, null).Should().Be(True);
         }
         [Fact]
         public void Do_Not_Expand_Objects_By_Default()
         {
             _builder.Build()
-                .Compare(new X { I = 3 }, new X { I = 3 })
-                .Should().Be(False);
+                .Compare(new X { I = 3 }, new X { I = 3 }).Path.Should()
+                .Be("object.Equals(Tests.ComparerFacts+X, Tests.ComparerFacts+X)");
         }
         [Fact]
         public void ExpandObject_Example()

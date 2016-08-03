@@ -20,7 +20,8 @@ namespace Tests
         {
             var a = new X { In = 2 };
             var b = new X { In = 3 };
-            _comparer.Compare(a, b).Should().Be(False);
+            _comparer.Compare(a, b).Path
+                .Should().Be("object.Equals(2, 3)");
         }
         [Fact]
         public void ShouldNot_Compare_Ignored_Properties()
@@ -41,7 +42,8 @@ namespace Tests
         {
             var a = new X { Px = new X { In = 3 } };
             var b = new X { Px = new X { In = 4 } };
-            _comparer.Compare(a, b).Should().Be(False);
+            _comparer.Compare(a, b).Path
+                .Should().Be("object.Equals(3, 4)");
         }
 
         [DataContract]
