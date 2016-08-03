@@ -13,7 +13,6 @@
         public ComparisonResult(string path) { Path = path; }
 
         internal static readonly ComparisonResult True = new ComparisonResult(true);
-        internal static readonly ComparisonResult False = new ComparisonResult(false);
         /// <summary>False</summary>
         public static implicit operator ComparisonResult (string s) => new ComparisonResult(s);
     }

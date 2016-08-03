@@ -43,7 +43,8 @@ namespace DeepComparison
         {
             var compareOption = _rulesContainer[formalType];
             if (compareOption == TreatObjectAs.PropertiesBag)
-                return (x, y) => _objectExpander.CompareProperties(x, y, formalType, Compare);
+                return (x, y) => _objectExpander.CompareProperties(
+                    x, y, formalType, Compare, _formatting);
             var collection = compareOption as TreatObjectAs.Collection;
             if (collection != null)
                 return (x, y) => CompareCollection(x, y, collection);
@@ -56,20 +57,14 @@ namespace DeepComparison
             (x, y) => Cmp(x, y, "customCompare", comparer);
 
         private ComparisonResult Cmp(object x, object y, string tag, Func<object, object, bool> comparer) 
-            => comparer(x, y) ? True : Explain(x, y, tag);
+            => comparer(x, y) ? True : _formatting.Explain(x, y, tag);
 
-        private ComparisonResult Explain(object x, object y, string tag)
-        {
-            var xText = _formatting.Format(x);
-            var yText = _formatting.Format(y);
-            return $"{tag}({xText}, {yText})";
-        }
 
         private ComparisonResult CompareCollection(object x, object y, TreatObjectAs.Collection collection)
         {
             if (x == null && y == null) return True;
             if (x == null || y == null)
-                return Explain(x, y, "compareCollections");
+                return _formatting.Explain(x, y, "compareCollections");
 
             var xE = collection.ToEnumerable(x);
             var yE = collection.ToEnumerable(y);

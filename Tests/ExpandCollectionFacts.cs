@@ -106,8 +106,8 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new X[] { null } };
             _builder.GoDeepFor(Collections.Array)
-                .Build()
-                .Compare(a, b).Should().Be(False);
+                .Build().Compare(a, b).Path.Should()
+                .Be("comparePropertiesOf(Tests.ExpandCollectionFacts+X, <null>)");
         }
 
         [Fact]
