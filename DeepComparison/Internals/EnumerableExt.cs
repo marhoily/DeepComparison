@@ -14,12 +14,15 @@ namespace DeepComparison
             var yEr = yE.GetEnumerator();
             while (xEr.MoveNext())
             {
-                if (!yEr.MoveNext()) return new ComparisonResult("y collection lacks an item");
+                if (!yEr.MoveNext())
+                    return new ComparisonResult("y collection lacks an item");
                 var c = compare(xEr.Current, yEr.Current);
                 if (!c.AreEqual)
                     return c;
             }
-            return !yEr.MoveNext() ? True : False;
+            if (yEr.MoveNext())
+                return new ComparisonResult("x collection lacks an item");
+            return True;
         }
     }
 }
