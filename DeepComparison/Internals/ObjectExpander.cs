@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using static System.Reflection.BindingFlags;
 
 namespace DeepComparison
 {
@@ -18,7 +19,7 @@ namespace DeepComparison
             if (x == null && y == null) return true;
             if (x == null || y == null) return false;
             return formalType
-                .GetProperties()
+                .GetProperties(Instance | Public | NonPublic) 
                 .Where(_propSelector)
                 .All(p => comparer(
                     p.GetValue(x, null),
