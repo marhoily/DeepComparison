@@ -11,7 +11,7 @@ namespace DeepComparison
         private readonly ObjectExpander _objectExpander = new ObjectExpander();
         private readonly RulesContainer _rulesContainer = new RulesContainer();
         /// <summary>Comparer compares all properties by default. Choose which you like</summary>
-        public DeepComparerBuilder FilterMembers(Func<PropertyInfo, bool> selector)
+        public DeepComparerBuilder FilterProperties(Func<PropertyInfo, bool> selector)
         {
             _objectExpander.SelectProperties(selector);
             return this;

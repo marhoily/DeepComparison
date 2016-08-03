@@ -19,9 +19,9 @@ namespace Tests
         }
 
         [Fact]
-        public void Should_See_Private_Fields() => _comparer
+        public void Should_Not_See_Fields() => _comparer
             .Compare(new X(3, 4), new X(3, 5))
-            .Should().BeFalse();
+            .Should().BeTrue();
 
         [Fact]
         public void Should_See_Private_Properties() => _comparer

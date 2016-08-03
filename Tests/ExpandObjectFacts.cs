@@ -11,7 +11,7 @@ namespace Tests
         private readonly DeepComparer _comparer =
             new DeepComparerBuilder()
                 .GoDeepFor(t => t.HasAttribute<DataContractAttribute>())
-                .FilterMembers(p => p.HasAttribute<DataMemberAttribute>())
+                .FilterProperties(p => p.HasAttribute<DataMemberAttribute>())
                 .Build();
 
         [Fact]
