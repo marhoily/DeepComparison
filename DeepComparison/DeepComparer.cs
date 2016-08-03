@@ -41,6 +41,7 @@ namespace DeepComparison
         {
             return _cache.Get(formalType)(x, y);
         }
+
         private FCompare GetComparer(Type formalType)
         {
             var compareOption = _rulesContainer[formalType];
@@ -54,7 +55,6 @@ namespace DeepComparison
                 return custom.Comparer;
             return ObjEquals;
         }
-
         private ComparisonResult ObjEquals(object x, object y)
         {
             if (Equals(x, y)) return True;
@@ -62,7 +62,6 @@ namespace DeepComparison
             var yText = _formatting.Format(y);
             return $"object.Equals({xText}, {yText})";
         }
-
         private ComparisonResult CompareCollection(object x, object y, TreatObjectAs.Collection collection)
         {
             if (x == null && y == null) return True;
@@ -72,15 +71,6 @@ namespace DeepComparison
             if (collection.Comparison == CollectionComparison.Sequential)
                 return xE.SequenceEqual(yE, _cache.Get(collection.ItemType));
             throw new NotImplementedException();
-        }
-    }
-
-    internal sealed class Formatting
-    {
-        public string Format(object obj)
-        {
-            if (obj == null) return "<null>";
-            return obj.ToString();
         }
     }
 }

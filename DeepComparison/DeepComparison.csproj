@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Collections.cs" />
     <Compile Include="ComparisonResult.cs" />
+    <Compile Include="Internals\Formatting.cs" />
     <Compile Include="Internals\CachingDictionary.cs" />
     <Compile Include="CollectionComparison.cs" />
     <Compile Include="TreatObjectAs.cs" />
