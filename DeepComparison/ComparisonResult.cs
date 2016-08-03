@@ -11,5 +11,8 @@
         public ComparisonResult(bool areEqual) { AreEqual = areEqual; }
         /// <summary>ctor</summary>
         public ComparisonResult(string path) { Path = path; }
+
+        internal static readonly ComparisonResult True = new ComparisonResult(true);
+        internal static readonly ComparisonResult False = new ComparisonResult(false);
     }
 }

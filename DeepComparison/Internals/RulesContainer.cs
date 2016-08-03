@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static DeepComparison.ComparisonResult;
 
 namespace DeepComparison
 {
@@ -24,9 +25,9 @@ namespace DeepComparison
                 ? TreatObjectAs.Simple
                 : new TreatObjectAs.Custom((x, y) =>
                 {
-                    if (x == null && y == null) return true;
-                    if (x == null || y == null) return false;
-                    return func((T) x, (T) y);
+                    if (x == null && y == null) return True;
+                    if (x == null || y == null) return False;
+                    return func((T) x, (T) y) ? True : False;
                 }));
         }
 

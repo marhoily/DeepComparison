@@ -3,6 +3,8 @@ using System.Collections;
 
 namespace DeepComparison
 {
+    using FCompare = Func<object, object, ComparisonResult>;
+
     /// <summary>Generic mechanism to match objects with comparers</summary>
     public abstract class TreatObjectAs
     {
@@ -28,13 +30,10 @@ namespace DeepComparison
         public sealed class Custom : TreatObjectAs
         {
             /// <summary>Your comparison function</summary>
-            public Func<object, object, bool> Comparer { get; }
+            public FCompare Comparer { get; }
 
             /// <summary>initializes all props</summary>
-            public Custom(Func<object, object, bool> comparer)
-            {
-                Comparer = comparer;
-            }
+            public Custom(FCompare comparer) { Comparer = comparer; }
         }
 
         private sealed class Special : TreatObjectAs { }

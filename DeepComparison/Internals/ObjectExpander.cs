@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using static System.Reflection.BindingFlags;
+using static DeepComparison.ComparisonResult;
 
 namespace DeepComparison
 {
@@ -13,18 +14,18 @@ namespace DeepComparison
         {
             _propSelector = selector;
         }
-        public bool CompareProperties(object x, object y, 
+        public ComparisonResult CompareProperties(object x, object y, 
             Type formalType, Func<object, object, Type, bool> comparer)
         {
-            if (x == null && y == null) return true;
-            if (x == null || y == null) return false;
+            if (x == null && y == null) return True;
+            if (x == null || y == null) return False;
             return formalType
                 .GetProperties(Instance | Public | NonPublic) 
                 .Where(_propSelector)
                 .All(p => comparer(
                     p.GetValue(x, null),
                     p.GetValue(y, null),
-                    p.PropertyType));
+                    p.PropertyType)) ? True : False;
         }
     }
 }

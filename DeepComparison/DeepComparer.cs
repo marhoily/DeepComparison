@@ -1,8 +1,9 @@
 ﻿using System;
+using static DeepComparison.ComparisonResult;
 
 namespace DeepComparison
 {
-    using FCompare = Func<object, object, bool>;
+    using FCompare = Func<object, object, ComparisonResult>;
 
     /// <summary>A class with Compare() method</summary>
     public sealed class DeepComparer
@@ -26,7 +27,7 @@ namespace DeepComparison
         ///     of the arguments</typeparam>
         public bool Compare<T>(T x, T y)
         {
-            return _cache.Get(typeof(T))(x, y);
+            return _cache.Get(typeof(T))(x, y).AreEqual;
         }
         /// <summary>Compares two objects deeply</summary>
         /// <param name="x">an object to compare</param>
@@ -37,7 +38,7 @@ namespace DeepComparison
         /// <returns>true when equal</returns>
         public bool Compare(object x, object y, Type formalType)
         {
-            return _cache.Get(formalType)(x, y);
+            return _cache.Get(formalType)(x, y).AreEqual;
         }
         private FCompare GetComparer(Type formalType)
         {
@@ -48,13 +49,18 @@ namespace DeepComparison
             if (collection != null)
                 return (x, y) => CompareCollection(x, y, collection);
             var custom = compareOption as TreatObjectAs.Custom;
-            return custom != null ? custom.Comparer : Equals;
+            return custom != null ? custom.Comparer : ObjEquals;
         }
-      
-        private bool CompareCollection(object x, object y, TreatObjectAs.Collection collection)
+
+        private static ComparisonResult ObjEquals(object x, object y)
         {
-            if (x == null && y == null) return true;
-            if (x == null || y == null) return false;
+            return Equals(x, y) ? True : new ComparisonResult("???");
+        }
+
+        private ComparisonResult CompareCollection(object x, object y, TreatObjectAs.Collection collection)
+        {
+            if (x == null && y == null) return True;
+            if (x == null || y == null) return False;
             var xE = collection.ToEnumerable(x);
             var yE = collection.ToEnumerable(y);
             if (collection.Comparison == CollectionComparison.Sequential)
