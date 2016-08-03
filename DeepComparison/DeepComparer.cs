@@ -48,30 +48,19 @@ namespace DeepComparison
             if (collection != null)
                 return (x, y) => CompareCollection(x, y, collection);
             var custom = compareOption as TreatObjectAs.Custom;
-            if (custom != null)
-            {
-                return Custom(custom.Comparer);
-            }
-            return ObjEquals;
+            return custom != null ? Custom(custom.Comparer) 
+                : (a, b) => Cmp(a, b, "object.Equals", Equals);
         }
 
-        private FCompare Custom(Func<object, object, bool> comparer)
+        private FCompare Custom(Func<object, object, bool> comparer) =>
+            (x, y) => Cmp(x, y, "customCompare", comparer);
+
+        private ComparisonResult Cmp(object x, object y, string tag, Func<object, object, bool> comparer)
         {
-            return (x, y) =>
-            {
-                if (comparer(x, y)) return True;
-                var xText = _formatting.Format(x);
-                var yText = _formatting.Format(y);
-                return $"customCompare({xText}, {yText})";
-            };
-        }
-   
-        private ComparisonResult ObjEquals(object x, object y)
-        {
-            if (Equals(x, y)) return True;
+            if (comparer(x, y)) return True;
             var xText = _formatting.Format(x);
             var yText = _formatting.Format(y);
-            return $"object.Equals({xText}, {yText})";
+            return $"{tag}({xText}, {yText})";
         }
         private ComparisonResult CompareCollection(object x, object y, TreatObjectAs.Collection collection)
         {
