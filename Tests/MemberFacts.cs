@@ -29,9 +29,12 @@ namespace Tests
             .Compare(new X(3, 4), new X(5, 4)).Message
             .Should().Be("object.Equals(3, 5)");
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public class X
         {
+            // ReSharper disable once NotAccessedField.Local
             private readonly int _y;
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             private int I { get; }
 
             public X(int i, int y)
