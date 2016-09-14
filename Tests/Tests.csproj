@@ -65,6 +65,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpandObjectWithNoProperties.cs" />
     <Compile Include="MemberFacts.cs" />
     <Compile Include="ExpandCollectionFacts.cs" />
     <Compile Include="CustomFacts.cs" />
