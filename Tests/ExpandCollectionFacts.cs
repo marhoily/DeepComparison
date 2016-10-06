@@ -79,7 +79,36 @@ namespace Tests
                 .GoDeepFor(Collections.List)
                 .GoDeepFor(Collections.Enumerable)
                 .Build()
-                .Compare(a, b).Should().Be(True));
+                .Compare(a, b));
+        }
+
+        class MultiList : IEnumerable<int>, IEnumerable<string>
+        {
+            IEnumerator<string> IEnumerable<string>.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator<int> IEnumerable<int>.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+        }
+        [Fact]
+        public void Two_Enumerable_Variants()
+        {
+            Assert.Throws<InvalidOperationException>(() => _builder
+                .GoDeepFor(Collections.Enumerable)
+                .Build()
+                .Compare(new MultiList(), new MultiList())).Message.Should().Be(
+                "It is not clear how to enumerate Tests.ExpandCollectionFacts+MultiList " +
+                "because it implements more than one variant of IEnumerable of: " +
+                "System.Int32, System.String");
         }
 
         [Fact]

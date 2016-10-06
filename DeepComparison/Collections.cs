@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,10 +46,21 @@ namespace DeepComparison
         /// Suggests to compare them sequentially </summary>
         public static readonly CollectionPredicate Enumerable = t =>
         {
-            var ifc = t.GetInterfaces().SingleOrDefault(x =>
-                x.IsGenericType &&
-                x.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-            if (ifc == null) return null;
+            var interfaces = t
+                .GetInterfaces()
+                .Where(x =>
+                    x.IsGenericType &&
+                    x.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+                .ToArray();
+            if (interfaces.Length > 1)
+                throw new InvalidOperationException(
+                    $"It is not clear how to enumerate {t.FullName} " +
+                    "because it implements more than one variant of IEnumerable of: " +
+                    string.Join(", ", interfaces.Select(i => i.GetGenericArguments()[0].FullName)));
+
+            if (interfaces.Length == 0)
+                return null;
+            var ifc = interfaces[0];
             return new TreatObjectAs.Collection(
                 CollectionComparison.Sequential,
                 ifc.GetGenericArguments()[0],
