@@ -118,7 +118,19 @@ namespace Tests
             var b = new X { A = new X[0]  };
             _builder.GoDeepFor(Collections.Array)
                 .Build().Compare(a, b).Message.Should()
-                .Be("Second collection lacks an item: x1");
+                .Be("Second collection lacks an item: x1, " +
+                    "and 0 more; First 0 items matched though");
+        }
+
+        [Fact]
+        public void Collection_First_Has_More_Elements_()
+        {
+            var a = new X { A = new[] { _x1, _x1, _x1 } };
+            var b = new X { A = new[] { _x1 } };
+            _builder.GoDeepFor(Collections.Array)
+                .Build().Compare(a, b).Message.Should()
+                .Be("Second collection lacks an item: x1, " +
+                    "and 1 more; First 1 items matched though");
         }
         [Fact]
         public void Collection_Second_Has_More_Elements()
@@ -127,7 +139,17 @@ namespace Tests
             var b = new X { A = new[] { _x1 } };
             _builder.GoDeepFor(Collections.Array)
                 .Build().Compare(a, b).Message.Should()
-                .Be("First collection lacks an item x1");
+                .Be("First collection lacks an item x1, " +
+                    "and 0 more; First 0 items matched though");
+        }
+        [Fact]
+        public void Collection_Second_Has_More_Elements_()
+        {
+            var a = new X { A = new[] { _x1,_x1,_x1, } };
+            var b = new X { A = new[] { _x1 } };
+            _builder.GoDeepFor(Collections.Array)
+                .Build().Compare(a, b).Message.Should()
+                .Be("Second collection lacks an item: x1, and 1 more; First 1 items matched though");
         }
         [Fact]
         public void Collection_Null_Element()
@@ -151,7 +173,7 @@ namespace Tests
 
         public class X
         {
-            private string _name;
+            private readonly string _name;
 
             public X(string name = "")
             {
