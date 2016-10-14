@@ -15,7 +15,7 @@ namespace Tests
             _builder = new DeepComparerBuilder()
                 .GoDeepFor(t => t == typeof(X));
 
-        private readonly X _x1 = new X();
+        private readonly X _x1 = new X("x1");
         private readonly X _x2 = new X { S = new HashSet<X>() };
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Tests
             var b = new X { A = new X[0]  };
             _builder.GoDeepFor(Collections.Array)
                 .Build().Compare(a, b).Message.Should()
-                .Be("y collection lacks an item");
+                .Be("Second collection lacks an item: x1");
         }
         [Fact]
         public void Collection_Second_Has_More_Elements()
@@ -127,7 +127,7 @@ namespace Tests
             var b = new X { A = new[] { _x1 } };
             _builder.GoDeepFor(Collections.Array)
                 .Build().Compare(a, b).Message.Should()
-                .Be("x collection lacks an item");
+                .Be("First collection lacks an item x1");
         }
         [Fact]
         public void Collection_Null_Element()
@@ -136,7 +136,7 @@ namespace Tests
             var b = new X { A = new X[] { null } };
             _builder.GoDeepFor(Collections.Array)
                 .Build().Compare(a, b).Message.Should()
-                .Be("comparePropertiesOf(Tests.ExpandCollectionFacts+X, <null>)");
+                .Be("comparePropertiesOf(x1, <null>)");
         }
 
         [Fact]
@@ -151,6 +151,15 @@ namespace Tests
 
         public class X
         {
+            private string _name;
+
+            public X(string name = "")
+            {
+                _name = name;
+            }
+
+            public override string ToString() => _name;
+
             public X[] A { get; set; }
             public List<X> L { get; set; }
             public HashSet<X> S { get; set; }

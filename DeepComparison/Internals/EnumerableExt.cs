@@ -15,13 +15,13 @@ namespace DeepComparison
             while (xEr.MoveNext())
             {
                 if (!yEr.MoveNext())
-                    return new ComparisonResult("y collection lacks an item");
+                    return new ComparisonResult("Second collection lacks an item: "+ xEr.Current);
                 var c = compare(xEr.Current, yEr.Current);
                 if (!c.AreEqual)
                     return c;
             }
             if (yEr.MoveNext())
-                return new ComparisonResult("x collection lacks an item");
+                return new ComparisonResult("First collection lacks an item " + yEr.Current);
             return True;
         }
     }
