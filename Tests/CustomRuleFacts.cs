@@ -26,8 +26,8 @@ namespace Tests
                     () => deepComparer.Compare(1, 2))
                 .Message.Should().Be(
                 "More than one custom rule for 'System.Int32':\r\n" +
-                "Custom(Comparer: System.Func`3[System.Object,System.Object,System.Boolean])\r\n" +
-                "Custom(Comparer: System.Func`3[System.Object,System.Object,System.Boolean])");
+                "Custom((a, b) => (a == b))\r\n" +
+                "Custom((a, b) => (a == b))");
         }
     }
 }

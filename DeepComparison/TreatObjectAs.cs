@@ -32,14 +32,20 @@ namespace DeepComparison
         /// <summary>Treat object as requiring a custom comparison</summary>
         public sealed class Custom : TreatObjectAs
         {
+            private readonly string _name;
+
             /// <summary>Your comparison function</summary>
             public Func<object, object, bool> Comparer { get; }
 
             /// <summary>initializes all props</summary>
-            public Custom(Func<object, object, bool> comparer) { Comparer = comparer; }
+            public Custom(string name, Func<object, object, bool> comparer)
+            {
+                _name = name;
+                Comparer = comparer;
+            }
 
             /// <inheritdoc/>
-            public override string ToString() => $"Custom(Comparer: {Comparer})";
+            public override string ToString() => $"Custom({_name})";
         }
 
         private sealed class Special : TreatObjectAs

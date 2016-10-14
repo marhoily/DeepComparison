@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace DeepComparison
@@ -36,7 +37,7 @@ namespace DeepComparison
         ///     <see cref="object.Equals(object)"/> by default. 
         ///     Choose objects you would like to apply 
         ///     your custom compare function to</summary>
-        public DeepComparerBuilder CustomRuleFor<T>(Func<T, T, bool> func)
+        public DeepComparerBuilder CustomRuleFor<T>(Expression<Func<T, T, bool>> func)
         {
             _rulesContainer.RuleFor(func);
             return this;

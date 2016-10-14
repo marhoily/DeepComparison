@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace DeepComparison
 {
@@ -18,15 +19,15 @@ namespace DeepComparison
         {
             _byFunc.Add(x => func(x) ?? TreatObjectAs.Simple);
         }
-        public void RuleFor<T>(Func<T, T, bool> func)
+        public void RuleFor<T>(Expression<Func<T, T, bool>> func)
         {
             _byFunc.Add(t => t != typeof(T)
                 ? TreatObjectAs.Simple
-                : new TreatObjectAs.Custom((x, y) =>
+                : new TreatObjectAs.Custom(func.ToString(), (x, y) =>
                 {
                     if (x == null && y == null) return true;
                     if (x == null || y == null) return false;
-                    return func((T) x, (T) y);
+                    return func.Compile().Invoke((T) x, (T) y);
                 }));
         }
 
