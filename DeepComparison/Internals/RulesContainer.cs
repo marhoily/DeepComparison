@@ -34,11 +34,17 @@ namespace DeepComparison
         {
             get
             {
-                return _byFunc
+                var rules = _byFunc
                     .Select(predicate => predicate(propertyType))
+                    .Where(rule => rule != TreatObjectAs.Simple)
                     .Distinct()
-                    .SingleOrDefault(x => x != TreatObjectAs.Simple)
-                       ?? TreatObjectAs.Simple;
+                    .ToList();
+                if (rules.Count ==1) return rules[0];
+                if (rules.Count > 1)
+                    throw new InvalidOperationException(
+                        $"More than one custom rule for '{propertyType}':\r\n" + 
+                        string.Join("\r\n", rules));
+                return TreatObjectAs.Simple;
             }
         }
     }

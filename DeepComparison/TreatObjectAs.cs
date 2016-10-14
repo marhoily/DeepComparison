@@ -25,6 +25,9 @@ namespace DeepComparison
                 ItemType = itemType;
                 ToEnumerable = expand;
             }
+
+            /// <inheritdoc/>
+            public override string ToString() => $"Collection(Comparison: {Comparison}, ItemType: {ItemType})";
         }
         /// <summary>Treat object as requiring a custom comparison</summary>
         public sealed class Custom : TreatObjectAs
@@ -34,14 +37,29 @@ namespace DeepComparison
 
             /// <summary>initializes all props</summary>
             public Custom(Func<object, object, bool> comparer) { Comparer = comparer; }
+
+            /// <inheritdoc/>
+            public override string ToString() => $"Custom(Comparer: {Comparer})";
         }
 
-        private sealed class Special : TreatObjectAs { }
+        private sealed class Special : TreatObjectAs
+        {
+            private readonly string _name;
+
+            public Special(string name)
+            {
+                _name = name;
+            }
+
+            /// <inheritdoc/>
+            public override string ToString() => _name;
+
+        }
         /// <summary>Tells comparer to compare properties 
         ///     instead of calling <see cref="object.Equals(object)"/> on the object itself</summary>
-        public static readonly TreatObjectAs PropertiesBag = new Special();
+        public static readonly TreatObjectAs PropertiesBag = new Special("PropertiesBag");
         /// <summary>Tells comparer to call <see cref="object.Equals(object)"/>
         ///     on this object. </summary>
-        public static readonly TreatObjectAs Simple = new Special();
+        public static readonly TreatObjectAs Simple = new Special("Simple");
     }
 }
