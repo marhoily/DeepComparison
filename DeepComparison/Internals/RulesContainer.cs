@@ -21,13 +21,14 @@ namespace DeepComparison
         }
         public void RuleFor<T>(Expression<Func<T, T, bool>> func)
         {
+            var compile = func.Compile();
             _byFunc.Add(t => t != typeof(T)
                 ? TreatObjectAs.Simple
                 : new TreatObjectAs.Custom(func.ToString(), (x, y) =>
                 {
                     if (x == null && y == null) return true;
                     if (x == null || y == null) return false;
-                    return func.Compile().Invoke((T) x, (T) y);
+                    return compile.Invoke((T) x, (T) y);
                 }));
         }
 
