@@ -8,7 +8,7 @@ namespace DeepComparison
     {
         private readonly List<Func<Type, TreatObjectAs>>
             _byFunc = new List<Func<Type, TreatObjectAs>>();
-        public void DelveInto(Func<Type, bool> func)
+        public void GoDeepFor(Func<Type, bool> func)
         {
             _byFunc.Add(t => func(t)
                 ? TreatObjectAs.PropertiesBag
@@ -36,10 +36,10 @@ namespace DeepComparison
             {
                 return _byFunc
                     .Select(predicate => predicate(propertyType))
+                    .Distinct()
                     .SingleOrDefault(x => x != TreatObjectAs.Simple)
                        ?? TreatObjectAs.Simple;
             }
         }
-
     }
 }

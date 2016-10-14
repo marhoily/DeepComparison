@@ -21,7 +21,7 @@ namespace DeepComparison
         ///     Choose objects you would like to treat as properties bags</summary>
         public DeepComparerBuilder GoDeepFor(Func<Type, bool> func)
         {
-            _rulesContainer.DelveInto(func);
+            _rulesContainer.GoDeepFor(func);
             return this;
         }
         /// <summary>Comparer compares all object as 
