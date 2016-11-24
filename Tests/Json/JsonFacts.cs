@@ -11,6 +11,14 @@ namespace Tests
             new JsonComparerBuilder();
 
         [Fact]
+        public void Nested_Object_Property_Value_Does_Not_Match()
+        {
+            _builder.Build().Compare(
+                    new JObject(new JProperty("Nested", new JObject(new JProperty("Age", 18)))),
+                    new { Nested = new { Age = 19}})
+                .Message.Should().Be("[<root>.Nested.Age]: 18 != 19");
+        }
+        [Fact]
         public void Property_Value_Does_Not_Match()
         {
             _builder.Build().Compare(

@@ -42,6 +42,12 @@ namespace Tests
                     case JTokenType.None:
                         break;
                     case JTokenType.Object:
+                        var result = CompareInner(
+                            property.Value.As<JObject>(), 
+                            match.GetValue(a),
+                            $"{context}.{property.Name}");
+                        if (result != ComparisonResult.True)
+                            return result;
                         break;
                     case JTokenType.Array:
                         break;
