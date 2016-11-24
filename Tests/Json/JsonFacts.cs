@@ -65,6 +65,12 @@ namespace Tests
                 .Message.Should().Be("$root.Nested.Age: 18 != 19");
         }
         [Fact]
+        public void Not_An_Array()
+        {
+            _builder.Build().Compare(new JArray(1, 2, 3), new  { })
+                .Message.Should().Be("not an array");
+        }
+        [Fact]
         public void Array_Comparison()
         {
             _builder.Build().Compare(new JArray(1, 2, 3), new [] { 1, 3, 2})
