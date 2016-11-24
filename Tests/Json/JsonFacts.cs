@@ -11,6 +11,26 @@ namespace Tests
             new JsonComparerBuilder();
 
         [Fact]
+        public void Property_Value_Does_Not_Match()
+        {
+            _builder.Build().Compare(
+                    new JObject(new JProperty("Age", 18)),
+                    new { Age = 19})
+                .Message.Should().Be("[<root>.Age]: 18 != 19");
+        }
+
+        [Fact]
+        public void Property_Type_Does_Not_Match()
+        {
+            _builder.Build().Compare(
+                    new JObject(new JProperty("Age", "blah")),
+                    new { Age = 18})
+                .Message.Should().Be(
+                    "JSON property Age is of type String and " +
+                    "we expected CLR object's property type to be System.String, " +
+                    "but found System.Int32");
+        }
+        [Fact]
         public void Property_Name_Of_AnonymousObject_Does_Not_Match()
         {
             _builder.Build().Compare(
