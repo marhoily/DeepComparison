@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -20,45 +21,20 @@ namespace Tests
 
         public ComparisonResult Compare(JToken j, object a)
         {
-            return CompareToken(j, a, "<root>");
+            return CompareToken(j, a, "$root");
         }
-        public ComparisonResult CompareInner(JObject j, object a, string context)
-        {
-            var properties = a.GetType().GetProperties();
-            foreach (var property in j.Properties())
-            {
-                var match = properties.FirstOrDefault(p => p.Name == property.Name);
-                if (match == null)
-                {
-                    var subject = CheckIfAnonymousType(a.GetType())
-                        ? "properties of an anonymous object:\r\n"
-                        : $"properties of type {a.GetType().FullName}:\r\n";
-                    return new ComparisonResult(
-                        $"property {property.Name} is not found among {subject}" +
-                        string.Join(", ", properties.Select(p => p.Name)));
-                }
-                var result = CompareToken(
-                    property.Value, match.GetValue(a),
-                    context + "." + property.Name);
-                if (result != ComparisonResult.True)
-                    return result;
-            }
-            return ComparisonResult.True;
-        }
-
-        private ComparisonResult CompareToken(JToken j, object a, string context )
+        private ComparisonResult CompareToken(JToken j, object a, string context)
         {
             switch (j.Type)
             {
                 case JTokenType.None:
                     break;
                 case JTokenType.Object:
-                    var result = CompareInner(j.As<JObject>(), a, context);
-                    if (result != ComparisonResult.True)
-                        return result;
-                    break;
+                    return CompareObject(j.As<JObject>(), a, context);
                 case JTokenType.Array:
-                    break;
+                    if (!(a is IEnumerable))
+                        return new ComparisonResult("not an array");
+                    return CompareArray(j.As<JArray>(), (IEnumerable)a, context);
                 case JTokenType.Constructor:
                     break;
                 case JTokenType.Property:
@@ -100,10 +76,42 @@ namespace Tests
                     }
                     if (!Equals(j.ToObject(a.GetType()), a))
                     {
-                        return new ComparisonResult($"[{context}]: {j} != {a}");
+                        return new ComparisonResult($"{context}: {j} != {a}");
                     }
 
                     break;
+            }
+            return ComparisonResult.True;
+        }
+
+        private ComparisonResult CompareArray(JArray j, IEnumerable a, string context)
+        {
+            var counter = 0;
+            return j.SequenceEqual(a, 
+                (jj, aa) => CompareToken((JToken) jj, aa,
+                    $"{context}[{counter++}]"));
+        }
+
+        private ComparisonResult CompareObject(JObject j, object a, string context)
+        {
+            var properties = a.GetType().GetProperties();
+            foreach (var property in j.Properties())
+            {
+                var match = properties.FirstOrDefault(p => p.Name == property.Name);
+                if (match == null)
+                {
+                    var subject = CheckIfAnonymousType(a.GetType())
+                        ? "properties of an anonymous object:\r\n"
+                        : $"properties of type {a.GetType().FullName}:\r\n";
+                    return new ComparisonResult(
+                        $"property {property.Name} is not found among {subject}" +
+                        string.Join(", ", properties.Select(p => p.Name)));
+                }
+                var result = CompareToken(
+                    property.Value, match.GetValue(a),
+                    context + "." + property.Name);
+                if (result != ComparisonResult.True)
+                    return result;
             }
             return ComparisonResult.True;
         }
