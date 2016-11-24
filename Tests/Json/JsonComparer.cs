@@ -18,9 +18,9 @@ namespace Tests
                 { JTokenType.Integer, typeof(int) }
             };
 
-        public ComparisonResult Compare(JObject j, object a)
+        public ComparisonResult Compare(JToken j, object a)
         {
-            return CompareInner(j, a, "<root>");
+            return CompareToken(j, a, "<root>");
         }
         public ComparisonResult CompareInner(JObject j, object a, string context)
         {
@@ -37,70 +37,77 @@ namespace Tests
                         $"property {property.Name} is not found among {subject}" +
                         string.Join(", ", properties.Select(p => p.Name)));
                 }
-                switch (property.Value.Type)
-                {
-                    case JTokenType.None:
-                        break;
-                    case JTokenType.Object:
-                        var result = CompareInner(
-                            property.Value.As<JObject>(), 
-                            match.GetValue(a),
-                            $"{context}.{property.Name}");
-                        if (result != ComparisonResult.True)
-                            return result;
-                        break;
-                    case JTokenType.Array:
-                        break;
-                    case JTokenType.Constructor:
-                        break;
-                    case JTokenType.Property:
-
-                        break;
-                    case JTokenType.Comment:
-                        break;
-                    case JTokenType.Float:
-                        break;
-                    case JTokenType.Boolean:
-                        break;
-                    case JTokenType.Null:
-                        break;
-                    case JTokenType.Undefined:
-                        break;
-                    case JTokenType.Date:
-                        break;
-                    case JTokenType.Raw:
-                        break;
-                    case JTokenType.Bytes:
-                        break;
-                    case JTokenType.Guid:
-                        break;
-                    case JTokenType.Uri:
-                        break;
-                    case JTokenType.TimeSpan:
-                        break;
-                    default:
-                        Type type;
-                        if (!Types.TryGetValue(property.Value.Type, out type))
-                            throw new ArgumentOutOfRangeException(
-                                "property.Value.Type", property.Value.Type.ToString());
-                        if (type != match.PropertyType)
-                            return new ComparisonResult(
-                                $"JSON property {property.Name} is of type {property.Value.Type} " +
-                                $"and we expected CLR object's property type to be {type}, " +
-                                $"but found {match.PropertyType}");
-                        if (!Equals(property.Value.ToObject(match.PropertyType),
-                            match.GetValue(a)))
-                        {
-                            return new ComparisonResult(
-                                $"[{context}.{property.Name}]: {property.Value} != {match.GetValue(a)}");
-                        }
-
-                        break;
-                }
-                //match.PropertyType
+                var result = CompareToken(
+                    property.Value, match.GetValue(a),
+                    context + "." + property.Name);
+                if (result != ComparisonResult.True)
+                    return result;
             }
             return ComparisonResult.True;
         }
+
+        private ComparisonResult CompareToken(JToken j, object a, string context )
+        {
+            switch (j.Type)
+            {
+                case JTokenType.None:
+                    break;
+                case JTokenType.Object:
+                    var result = CompareInner(j.As<JObject>(), a, context);
+                    if (result != ComparisonResult.True)
+                        return result;
+                    break;
+                case JTokenType.Array:
+                    break;
+                case JTokenType.Constructor:
+                    break;
+                case JTokenType.Property:
+
+                    break;
+                case JTokenType.Comment:
+                    break;
+                case JTokenType.Float:
+                    break;
+                case JTokenType.Boolean:
+                    break;
+                case JTokenType.Null:
+                    break;
+                case JTokenType.Undefined:
+                    break;
+                case JTokenType.Date:
+                    break;
+                case JTokenType.Raw:
+                    break;
+                case JTokenType.Bytes:
+                    break;
+                case JTokenType.Guid:
+                    break;
+                case JTokenType.Uri:
+                    break;
+                case JTokenType.TimeSpan:
+                    break;
+                default:
+                    Type type;
+                    if (!Types.TryGetValue(j.Type, out type))
+                        throw new ArgumentOutOfRangeException(
+                            "property.Value.Type", j.Type.ToString());
+                    if (type != a.GetType())
+                    {
+                        return new ComparisonResult(
+                            $"JSON property {context} is of type {j.Type} " +
+                            $"and we expected CLR object's property type to be {type}, " +
+                            $"but found {a.GetType()}");
+                    }
+                    if (!Equals(j.ToObject(a.GetType()), a))
+                    {
+                        return new ComparisonResult($"[{context}]: {j} != {a}");
+                    }
+
+                    break;
+            }
+            return ComparisonResult.True;
+        }
+
         private static bool CheckIfAnonymousType(Type type)
         {
             if (type == null)

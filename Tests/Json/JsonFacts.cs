@@ -11,14 +11,6 @@ namespace Tests
             new JsonComparerBuilder();
 
         [Fact]
-        public void Nested_Object_Property_Value_Does_Not_Match()
-        {
-            _builder.Build().Compare(
-                    new JObject(new JProperty("Nested", new JObject(new JProperty("Age", 18)))),
-                    new { Nested = new { Age = 19}})
-                .Message.Should().Be("[<root>.Nested.Age]: 18 != 19");
-        }
-        [Fact]
         public void Property_Value_Does_Not_Match()
         {
             _builder.Build().Compare(
@@ -34,7 +26,7 @@ namespace Tests
                     new JObject(new JProperty("Age", "blah")),
                     new { Age = 18})
                 .Message.Should().Be(
-                    "JSON property Age is of type String and " +
+                    "JSON property <root>.Age is of type String and " +
                     "we expected CLR object's property type to be System.String, " +
                     "but found System.Int32");
         }
@@ -64,5 +56,22 @@ namespace Tests
                     new {Age = 18})
                 .Should().Be(ComparisonResult.True);
         }
+        [Fact]
+        public void Nested_Object_Property_Value_Does_Not_Match()
+        {
+            _builder.Build().Compare(
+                    new JObject(new JProperty("Nested", new JObject(new JProperty("Age", 18)))),
+                    new { Nested = new { Age = 19 } })
+                .Message.Should().Be("[<root>.Nested.Age]: 18 != 19");
+        }
+        [Fact]
+        public void Array_Comparison()
+        {
+            _builder.Build().Compare(
+                    new JArray(1, 2, 3), 
+                    new [] { 1, 3, 2})
+                .Message.Should().Be("[<root>.Nested.Age]: 18 != 19");
+        }
+
     }
 }
