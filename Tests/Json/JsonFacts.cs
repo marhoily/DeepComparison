@@ -7,13 +7,17 @@ namespace Tests
 {
     public sealed class JsonFacts
     {
-        private readonly JsonComparerBuilder _builder =
-            new JsonComparerBuilder();
+        private readonly JsonComparer _comparer;
+
+        public JsonFacts()
+        {
+            _comparer = new JsonComparerBuilder().Build();
+        }
 
         [Fact]
         public void Property_Value_Does_Not_Match()
         {
-            _builder.Build().Compare(
+            _comparer.Compare(
                     new JObject(new JProperty("Age", 18)),
                     new { Age = 19})
                 .Message.Should().Be("$root.Age: 18 != 19");
@@ -22,7 +26,7 @@ namespace Tests
         [Fact]
         public void Property_Type_Does_Not_Match()
         {
-            _builder.Build().Compare(
+            _comparer.Compare(
                     new JObject(new JProperty("Age", "blah")),
                     new { Age = 18})
                 .Message.Should().Be(
@@ -33,9 +37,7 @@ namespace Tests
         [Fact]
         public void Property_Name_Of_AnonymousObject_Does_Not_Match()
         {
-            _builder.Build().Compare(
-                    new JObject(new JProperty("Age", 18)),
-                    new {Blah = 18})
+            _comparer.Compare(new JObject(new JProperty("Age", 18)), new {Blah = 18})
                 .Message.Should().Be(
                     "property Age is not found among properties of an anonymous object:\r\n" +
                     "Blah");
@@ -43,7 +45,7 @@ namespace Tests
         [Fact]
         public void Property_Name_Of_Tangible_Object_Does_Not_Match()
         {
-            _builder.Build().Compare(new JObject(new JProperty("Age", 18)), "")
+            _comparer.Compare(new JObject(new JProperty("Age", 18)), "")
                 .Message.Should().Be(
                     "property Age is not found among properties of type System.String:\r\n" +
                     "Chars, Length");
@@ -51,15 +53,13 @@ namespace Tests
         [Fact]
         public void Property_Matches()
         {
-            _builder.Build().Compare(
-                    new JObject(new JProperty("Age", 18)),
-                    new {Age = 18})
+            _comparer.Compare(new JObject(new JProperty("Age", 18)), new {Age = 18})
                 .Should().Be(ComparisonResult.True);
         }
         [Fact]
         public void Nested_Object_Property_Value_Does_Not_Match()
         {
-            _builder.Build().Compare(
+            _comparer.Compare(
                     new JObject(new JProperty("Nested", new JObject(new JProperty("Age", 18)))),
                     new { Nested = new { Age = 19 } })
                 .Message.Should().Be("$root.Nested.Age: 18 != 19");
@@ -67,15 +67,20 @@ namespace Tests
         [Fact]
         public void Not_An_Array()
         {
-            _builder.Build().Compare(new JArray(1, 2, 3), new  { })
+            _comparer.Compare(new JArray(1, 2, 3), new  { })
                 .Message.Should().Be("not an array");
         }
         [Fact]
         public void Array_Comparison()
         {
-            _builder.Build().Compare(new JArray(1, 2, 3), new [] { 1, 3, 2})
+            _comparer.Compare(new JArray(1, 2, 3), new [] { 1, 3, 2})
                 .Message.Should().Be("$root[1]: 2 != 3");
         }
-
+        [Fact]
+        public void Different_Array_Size()
+        {
+            _comparer.Compare(new JArray(1, 3), new [] { 1, 3, 2}).Message.Should()
+                .Be("First collection lacks an item 2, and 0 more; First 2 items matched though");
+        }
     }
 }
