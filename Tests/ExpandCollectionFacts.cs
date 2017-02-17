@@ -112,6 +112,16 @@ namespace Tests
         }
 
         [Fact]
+        public void Collection_First_Is_Null()
+        {
+            var a = new X { A = null };
+            var b = new X { A = new X[0]  };
+            _builder.GoDeepFor(Collections.Array)
+                .Build().Compare(a, b).ToString().Should()
+                .Be("A: compareCollections(<null>, Tests.ExpandCollectionFacts+X[])");
+        }
+
+        [Fact]
         public void Collection_First_Has_More_Elements()
         {
             var a = new X { A = new[] { _x1 } };

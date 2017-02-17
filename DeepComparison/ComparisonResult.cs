@@ -29,6 +29,6 @@ namespace DeepComparison
 
         /// <summary>pretty prints the result</summary>
         public override string ToString()
-            => $"{string.Join(".", Path)}: {Message}";
+            => AreEqual ? "Equal" : $"{string.Join(".", Path)}: {Message}";
     }
 }
