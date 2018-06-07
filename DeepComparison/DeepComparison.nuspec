@@ -11,7 +11,7 @@
     <tags>deep deeply equal equals equality compare comparer comparison structural</tags>
   </metadata>
   <files>
-    <file src="bin\Release\DeepComparison.dll" target="lib\net452\DeepComparison.dll" />
-    <file src="bin\Release\DeepComparison.XML" target="lib\net452\DeepComparison.XML" />
+    <file src="bin\Release\DeepComparison.dll" target="lib\net45\DeepComparison.dll" />
+    <file src="bin\Release\DeepComparison.XML" target="lib\net45\DeepComparison.XML" />
   </files>
 </package>

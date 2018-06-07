@@ -6,7 +6,7 @@ using System.Linq;
 namespace DeepComparison
 {
     /// <summary>
-    /// Has devault collection selectors to be use with 
+    /// Has default collection selectors to be use with 
     /// <see cref="DeepComparerBuilder.GoDeepFor(System.Func{System.Type,bool})"/>
     /// </summary>
     public static class Collections
