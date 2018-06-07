@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClrTypes.cs" />
     <Compile Include="Collections.cs" />
     <Compile Include="ComparisonResult.cs" />
     <Compile Include="Internals\Formatting.cs" />

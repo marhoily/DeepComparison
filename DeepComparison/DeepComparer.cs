@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using static DeepComparison.ComparisonResult;
 
 namespace DeepComparison
@@ -70,6 +71,14 @@ namespace DeepComparison
             var yE = collection.ToEnumerable(y);
             if (collection.Comparison == CollectionComparison.Sequential)
                 return xE.SequenceEqual(yE, _cache.Get(collection.ItemType));
+            if (collection.Comparison == CollectionComparison.Equivalency)
+            {
+                var eq = (bool) x.GetType()
+                    .GetMethod(nameof(HashSet<int>.SetEquals))
+                    .Invoke(x, new[] {y});
+                if (eq) return True;
+                return new ComparisonResult("HashSets are not equal");
+            }
             throw new NotImplementedException();
         }
     }

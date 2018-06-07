@@ -13,10 +13,12 @@ namespace DeepComparison
     {
         /// <summary>Tells comparer how to find arrays. 
         /// Suggests to compare them sequentially </summary>
-        public static readonly CollectionPredicate Array = 
-            t => !t.IsArray ? null : new TreatObjectAs.Collection(
-            CollectionComparison.Sequential, 
-            t.GetElementType(), x => (IEnumerable)x);
+        public static readonly CollectionPredicate Array =
+            t => !t.IsArray
+                ? null
+                : new TreatObjectAs.Collection(
+                    CollectionComparison.Sequential,
+                    t.GetElementType(), x => (IEnumerable) x);
 
         /// <summary>Tells comparer how to find <see cref="List"/>s.
         /// Suggests to compare them sequentially </summary>
